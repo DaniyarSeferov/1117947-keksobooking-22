@@ -39,13 +39,13 @@ const getRandomFloatInclusive = (min, max, decimals = 0) => {
   return Number(Math.floor(rand + 'e' + decimals) + 'e-' + decimals);
 };
 
-const getRandomArrayElement = (elemets) => {
-  return elemets[getRandomIntInclusive(0, elemets.length - 1)];
+const getRandomArrayElement = (elements) => {
+  return elements[getRandomIntInclusive(0, elements.length - 1)];
 };
 
-const getRandomArrayElements = (elemets) => {
-  const randNumber = getRandomIntInclusive(0, elemets.length - 1);
-  return elemets.slice(randNumber);
+const getRandomArrayElements = (elements) => {
+  const randNumber = getRandomIntInclusive(0, elements.length - 1);
+  return elements.slice(randNumber);
 };
 
 export {getRandomIntInclusive, getRandomFloatInclusive, getRandomArrayElement, getRandomArrayElements};
