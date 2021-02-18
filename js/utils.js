@@ -48,4 +48,37 @@ const getRandomArrayElements = (elements) => {
   return elements.slice(randNumber);
 };
 
-export {getRandomIntInclusive, getRandomFloatInclusive, getRandomArrayElement, getRandomArrayElements};
+const getAccomodationMap = (type) => {
+  const accomodationMap = {
+    palace: {
+      label: 'Дворец',
+      minPrice: 10000,
+    },
+    flat:{
+      label: 'Квартира',
+      minPrice: 1000,
+    },
+    house:{
+      label: 'Дом',
+      minPrice: 5000,
+    },
+    bungalow:{
+      label: 'Бунгало',
+      minPrice: 0,
+    },
+  };
+
+  return accomodationMap[type];
+};
+
+const getAccomodationLabel = (type) => {
+  const accomodationMap = getAccomodationMap(type);
+  return accomodationMap ? accomodationMap.label : '';
+}
+
+const getAccomodationMinPrice = (type) => {
+  const accomodationMap = getAccomodationMap(type);
+  return accomodationMap ? accomodationMap.minPrice : 0;
+}
+
+export {getRandomIntInclusive, getRandomFloatInclusive, getRandomArrayElement, getRandomArrayElements, getAccomodationLabel, getAccomodationMinPrice};

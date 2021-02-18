@@ -1,4 +1,5 @@
 import {getAllDeclarations} from './data.js';
+import {getAccomodationLabel} from './utils.js';
 
 const cardTemplate = document.querySelector('#card')
   .content.querySelector('.popup');
@@ -7,20 +8,9 @@ const mapCanvasElement = document.querySelector('#map-canvas');
 const declarations = getAllDeclarations();
 const declarationListFragment = document.createDocumentFragment();
 
-const getTypeLabel = (type) => {
-  const typeMap = {
-    palace: 'Дворец',
-    flat: 'Квартира',
-    house: 'Дом',
-    bungalow: 'Бунгало',
-  };
-
-  return typeMap[type];
-};
-
 const getRoomsContent = (roomsNumber, guestsNumber) => {
-  let room = roomsNumber === 1 ? 'комната' : 'комнаты';
-  room = roomsNumber === 5 ? 'комнат' : room;
+  let room = roomsNumber === 1 ? 'комната' :
+    roomsNumber === 5 ? 'комнат' : 'комнаты';
   let guest = guestsNumber === 1 ? 'гостя' : 'гостей';
   return `${roomsNumber} ${room} для ${guestsNumber} ${guest}`;
 }
@@ -63,7 +53,7 @@ const changeElementContent = (element, selector, elementKey, data, dataKey) => {
           selectedElement[elementKey] = `Заезд после ${data[dataKey]}, выезд до ${data.checkout}`;
           break;
         case 'type':
-          selectedElement[elementKey] = getTypeLabel(data[dataKey]);
+          selectedElement[elementKey] = getAccomodationLabel(data[dataKey]);
           break;
         case 'rooms':
           selectedElement[elementKey] = getRoomsContent(data.rooms, data.guests);
