@@ -77,5 +77,8 @@ points.forEach((point) => {
     .addTo(map)
     .bindPopup(
       createCard(point),
+      {
+        keepInView: true,
+      },
     );
 });
