@@ -1,12 +1,7 @@
-import {getAllDeclarations} from './data.js';
 import {getAccomodationLabel} from './utils.js';
 
 const cardTemplate = document.querySelector('#card')
   .content.querySelector('.popup');
-const mapCanvasElement = document.querySelector('#map-canvas');
-
-const declarations = getAllDeclarations();
-const declarationListFragment = document.createDocumentFragment();
 
 const getRoomsContent = (roomsNumber, guestsNumber) => {
   let room = roomsNumber === 1 ? 'комната' :
@@ -91,12 +86,5 @@ const createCard = (declaration) => {
   changeElementContent(cardElement, '.popup__photos', 'innerHTML', offer, 'photos');
   return cardElement;
 };
-
-declarations.forEach((declaration) => {
-  const cardElement = createCard(declaration);
-  declarationListFragment.appendChild(cardElement);
-});
-
-mapCanvasElement.appendChild(declarationListFragment.firstChild);
 
 export {createCard};
