@@ -49,18 +49,27 @@ const setAddress = ({lat, lng}) => {
   addressElement.value = `${lat}, ${lng}`;
 }
 
-disableForm();
-
-
 titleElement.addEventListener('invalid', () => {
   if (titleElement.validity.tooShort) {
-    titleElement.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
+    titleElement.setCustomValidity('Заголовок должен состоять минимум из 30-ти символов');
   } else if (titleElement.validity.tooLong) {
-    titleElement.setCustomValidity('Имя не должно превышать 100 символов');
+    titleElement.setCustomValidity('Заголовок не должно превышать 100 символов');
   } else if (titleElement.validity.valueMissing) {
     titleElement.setCustomValidity('Обязательное поле');
   } else {
     titleElement.setCustomValidity('');
+  }
+});
+
+priceElement.addEventListener('invalid', () => {
+  if (priceElement.validity.rangeOverflow) {
+    priceElement.setCustomValidity(`Цена должна быть ниже ${priceElement.max} р.`);
+  } else if (priceElement.validity.rangeUnderflow) {
+    priceElement.setCustomValidity(`Цена должна быть выше ${priceElement.min} р.`);
+  } else if (priceElement.validity.valueMissing) {
+    priceElement.setCustomValidity('Обязательное поле');
+  } else {
+    priceElement.setCustomValidity('');
   }
 });
 
@@ -72,7 +81,7 @@ const validateRoomCapacity = () => {
   if (roomNumber === 100 && capacity !== 0) {
     error = 'Только не для гостей';
   } else if (roomNumber !== 100 && capacity === 0) {
-    error = 'Только 100 комнат';
+    error = 'Только для 100 комнат';
   } else if (capacity > roomNumber) {
     error = 'Количество гостей не должно превышать количество комнат.';
   }
@@ -92,5 +101,6 @@ capacityElement.addEventListener('input', () => {
   capacityElement.reportValidity();
 });
 
+disableForm();
 
-export {enableForm, setAddress};
+export {enableForm, disableForm, setAddress};
