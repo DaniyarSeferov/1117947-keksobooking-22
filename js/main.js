@@ -1,2 +1,3 @@
-import './popup.js';
+import './filters.js';
 import './form.js';
+import './map.js';
