@@ -5,6 +5,8 @@ const typeElement = adFormElement.querySelector('#type');
 const priceElement = adFormElement.querySelector('#price');
 const timeInElement = adFormElement.querySelector('#timein');
 const timeOutElement = adFormElement.querySelector('#timeout');
+const addressElement = adFormElement.querySelector('#address');
+const fieldsetFormElements = adFormElement.querySelectorAll('fieldset');
 const titleElement = adFormElement.querySelector('#title');
 const roomNumberElement = adFormElement.querySelector('#room_number');
 const capacityElement = adFormElement.querySelector('#capacity');
@@ -28,6 +30,27 @@ timeInElement.addEventListener('change', (event) => {
 timeOutElement.addEventListener('change', (event) => {
   timeInElement.value = event.target.value;
 });
+
+const disableForm = () => {
+  adFormElement.classList.add('ad-form--disabled');
+  fieldsetFormElements.forEach((fieldsetElement) => {
+    fieldsetElement.disabled = true;
+  });
+}
+
+const enableForm = () => {
+  adFormElement.classList.remove('ad-form--disabled');
+  fieldsetFormElements.forEach((fieldsetElement) => {
+    fieldsetElement.disabled = false;
+  });
+}
+
+const setAddress = ({lat, lng}) => {
+  addressElement.value = `${lat}, ${lng}`;
+}
+
+disableForm();
+
 
 titleElement.addEventListener('invalid', () => {
   if (titleElement.validity.tooShort) {
@@ -68,3 +91,6 @@ capacityElement.addEventListener('input', () => {
   capacityElement.setCustomValidity(error);
   capacityElement.reportValidity();
 });
+
+
+export {enableForm, setAddress};
