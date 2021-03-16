@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 5000;
+
 const validateRandomRange = (min, max) => {
   if (min < 0 || max < 0) {
     throw new Error('Parameters must be greater than or equal to zero.')
@@ -81,4 +83,41 @@ const getAccomodationMinPrice = (type) => {
   return accomodationMap ? accomodationMap.minPrice : 0;
 }
 
-export {getRandomIntInclusive, getRandomFloatInclusive, getRandomArrayElement, getRandomArrayElements, getAccomodationLabel, getAccomodationMinPrice};
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'fixed';
+  alertContainer.style.top = '120px';
+  alertContainer.style.right = 0;
+  alertContainer.style.bottom = 'auto';
+  alertContainer.style.left = 0;
+  alertContainer.style.width = '600px';
+  alertContainer.style.minHeight = '300px';
+  alertContainer.style.margin = 'auto';
+  alertContainer.style.padding = '20px';
+  alertContainer.style.fontSize = '20px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'white';
+  alertContainer.style.boxShadow = '0 4px 20px grey';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+}
+
+const isEscKey = (evt) => {
+  let handled = false;
+  if (evt.key !== undefined && evt.key === 'Escape') {
+    handled = true;
+  } else if (evt.keyCode !== undefined && evt.keyCode === 27) {
+    handled = true;
+  }
+  return handled;
+}
+
+export {getRandomIntInclusive, getRandomFloatInclusive, getRandomArrayElement,
+  getRandomArrayElements, getAccomodationLabel, getAccomodationMinPrice, showAlert, isEscKey};
