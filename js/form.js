@@ -1,5 +1,8 @@
 import {getAccomodationMinPrice} from './utils.js';
 
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
+
 const adFormElement = document.querySelector('.ad-form');
 const typeElement = adFormElement.querySelector('#type');
 const priceElement = adFormElement.querySelector('#price');
@@ -49,28 +52,32 @@ const setAddress = ({lat, lng}) => {
   addressElement.value = `${lat}, ${lng}`;
 }
 
-titleElement.addEventListener('invalid', () => {
-  if (titleElement.validity.tooShort) {
-    titleElement.setCustomValidity('Заголовок должен состоять минимум из 30-ти символов');
-  } else if (titleElement.validity.tooLong) {
-    titleElement.setCustomValidity('Заголовок не должно превышать 100 символов');
-  } else if (titleElement.validity.valueMissing) {
-    titleElement.setCustomValidity('Обязательное поле');
+titleElement.addEventListener('input', () => {
+  const valueLength = titleElement.value.length;
+
+  if (valueLength < MIN_TITLE_LENGTH) {
+    titleElement.setCustomValidity('Ещё ' + (MIN_TITLE_LENGTH - valueLength) +' симв.');
+  } else if (valueLength > MAX_TITLE_LENGTH) {
+    titleElement.setCustomValidity('Удалите лишние ' + (valueLength - MAX_TITLE_LENGTH) +' симв.');
   } else {
     titleElement.setCustomValidity('');
   }
+
+  titleElement.reportValidity();
 });
 
-priceElement.addEventListener('invalid', () => {
-  if (priceElement.validity.rangeOverflow) {
-    priceElement.setCustomValidity(`Цена должна быть ниже ${priceElement.max} р.`);
-  } else if (priceElement.validity.rangeUnderflow) {
-    priceElement.setCustomValidity(`Цена должна быть выше ${priceElement.min} р.`);
-  } else if (priceElement.validity.valueMissing) {
-    priceElement.setCustomValidity('Обязательное поле');
+priceElement.addEventListener('input', () => {
+  const priceValue = Number(priceElement.value);
+
+  if (priceValue > priceElement.max) {
+    priceElement.setCustomValidity(`Цена должна быть ниже либо равна ${priceElement.max} р.`);
+  } else if (priceValue < priceElement.min) {
+    priceElement.setCustomValidity(`Цена должна быть выше либо равна ${priceElement.min} р.`);
   } else {
     priceElement.setCustomValidity('');
   }
+
+  priceElement.reportValidity();
 });
 
 const validateRoomCapacity = () => {
@@ -86,19 +93,16 @@ const validateRoomCapacity = () => {
     error = 'Количество гостей не должно превышать количество комнат.';
   }
 
-  return error;
+  capacityElement.setCustomValidity(error);
+  capacityElement.reportValidity();
 }
 
 roomNumberElement.addEventListener('input', () => {
-  const error = validateRoomCapacity();
-  roomNumberElement.setCustomValidity(error);
-  roomNumberElement.reportValidity();
+  validateRoomCapacity();
 });
 
 capacityElement.addEventListener('input', () => {
-  const error = validateRoomCapacity();
-  capacityElement.setCustomValidity(error);
-  capacityElement.reportValidity();
+  validateRoomCapacity();
 });
 
 disableForm();
