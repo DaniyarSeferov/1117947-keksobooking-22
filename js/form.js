@@ -20,10 +20,25 @@ const setPriceElementData = (value) => {
   priceElement.min = minPrice;
 }
 
-setPriceElementData(typeElement.value);
+const validatePrice = () => {
+  const priceValue = Number(priceElement.value);
+  const priceMin = Number(priceElement.min);
+  const priceMax = Number(priceElement.max);
+
+  if (priceValue > priceMax) {
+    priceElement.setCustomValidity(`Цена должна быть ниже либо равна ${priceMax} р.`);
+  } else if (priceValue < priceMin) {
+    priceElement.setCustomValidity(`Цена должна быть выше либо равна ${priceMin} р.`);
+  } else {
+    priceElement.setCustomValidity('');
+  }
+
+  priceElement.reportValidity();
+}
 
 typeElement.addEventListener('change', (event) => {
   setPriceElementData(event.target.value);
+  validatePrice();
 });
 
 timeInElement.addEventListener('change', (event) => {
@@ -66,20 +81,6 @@ titleElement.addEventListener('input', () => {
   titleElement.reportValidity();
 });
 
-priceElement.addEventListener('input', () => {
-  const priceValue = Number(priceElement.value);
-
-  if (priceValue > priceElement.max) {
-    priceElement.setCustomValidity(`Цена должна быть ниже либо равна ${priceElement.max} р.`);
-  } else if (priceValue < priceElement.min) {
-    priceElement.setCustomValidity(`Цена должна быть выше либо равна ${priceElement.min} р.`);
-  } else {
-    priceElement.setCustomValidity('');
-  }
-
-  priceElement.reportValidity();
-});
-
 const validateRoomCapacity = () => {
   let error = '';
   const capacity = Number(capacityElement.value);
@@ -97,14 +98,11 @@ const validateRoomCapacity = () => {
   capacityElement.reportValidity();
 }
 
-roomNumberElement.addEventListener('input', () => {
-  validateRoomCapacity();
-});
+priceElement.addEventListener('input', validatePrice);
+roomNumberElement.addEventListener('input', validateRoomCapacity);
+capacityElement.addEventListener('input', validateRoomCapacity);
 
-capacityElement.addEventListener('input', () => {
-  validateRoomCapacity();
-});
-
+setPriceElementData(typeElement.value);
 disableForm();
 
 export {enableForm, disableForm, setAddress};
