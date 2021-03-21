@@ -1,7 +1,6 @@
-import {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault} from './map.js';
+import {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMsg} from './map.js';
 import {resetForm, setAdFormReset, setAdFormSubmit, showErrorMsg, showSuccessMsg} from './form.js';
 import {createFetch} from './create-fetch.js';
-import {showAlert} from './utils.js';
 import {resetFiltersForm} from './filters.js';
 
 const getDeclarations = (map) => {
@@ -10,7 +9,7 @@ const getDeclarations = (map) => {
   createFetch(declarationsUrl, null, (declarations) => {
     addDeclarationPins(declarations, map);
   }, () => {
-    showAlert('Не удалось получить данные с сервера. Попробуйте перезагрузить страницу.');
+    showDataErrorMsg();
   });
 }
 

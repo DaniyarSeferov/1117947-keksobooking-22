@@ -132,39 +132,60 @@ const setAdFormReset = (onReset) => {
   });
 };
 
+const removeSuccessElement = () => {
+  successElement.remove();
+  window.removeEventListener('keydown', handleSuccessWindowKeydown);
+  document.removeEventListener('click', handleSuccessDocumentClick);
+}
+
+const handleSuccessWindowKeydown = (evt) => {
+  const isEsc = isEscKey(evt);
+
+  if (isEsc) {
+    removeSuccessElement();
+  }
+}
+
+const handleSuccessDocumentClick = (evt) => {
+  if (mainElement.contains(successElement)) {
+    evt.preventDefault();
+    removeSuccessElement();
+  }
+}
+
 const showSuccessMsg = () => {
   mainElement.appendChild(successElement);
 
-  window.addEventListener('keydown', (evt) => {
-    const isEsc = isEscKey(evt);
-
-    if (isEsc) {
-      successElement.remove();
-    }
-  });
-
-  document.addEventListener('click', (evt) => {
-    if (mainElement.contains(successElement)) {
-      evt.preventDefault();
-      successElement.remove();
-    }
-  });
+  window.addEventListener('keydown', handleSuccessWindowKeydown);
+  document.addEventListener('click', handleSuccessDocumentClick);
 };
+
+const removeFormErrorElement = () => {
+  errorElement.remove();
+  window.removeEventListener('keydown', handleFormWindowKeydown);
+  errorBtnElement.removeEventListener('click', handleErrorBtnClick);
+}
+
+const handleFormWindowKeydown = (evt) => {
+  const isEsc = isEscKey(evt);
+
+  if (isEsc) {
+    removeFormErrorElement();
+  }
+}
+
+const handleErrorBtnClick = (evt) => {
+  if (mainElement.contains(errorElement)) {
+    evt.preventDefault();
+    removeFormErrorElement();
+  }
+}
 
 const showErrorMsg = () => {
   mainElement.appendChild(errorElement);
 
-  window.addEventListener('keydown', (evt) => {
-    const isEsc = isEscKey(evt);
-
-    if (isEsc) {
-      errorElement.remove();
-    }
-  });
-
-  errorBtnElement.addEventListener('click', () => {
-    errorElement.remove();
-  });
+  window.addEventListener('keydown', handleFormWindowKeydown);
+  errorBtnElement.addEventListener('click', handleErrorBtnClick);
 }
 
 priceElement.addEventListener('input', validatePrice);

@@ -2,6 +2,7 @@
 import {enableFiltersForm} from './filters.js';
 import {enableForm, setAddress} from './form.js';
 import {createCard} from './popup.js';
+import {isEscKey} from './utils.js';
 
 const TOKIO_COORDINATES = {
   lat: 35.68950,
@@ -9,6 +10,10 @@ const TOKIO_COORDINATES = {
 };
 
 let mainPinMarker = null;
+const dataErrorTemplate = document.querySelector('#data-error')
+  .content.querySelector('.error');
+const dataErrorElement = dataErrorTemplate.cloneNode(true);
+const mainElement = document.querySelector('main');
 
 const createMap = () => {
   const map = L.map('map-canvas')
@@ -97,4 +102,32 @@ const changeMainPinToDefault = () => {
   setAddress(TOKIO_COORDINATES);
 }
 
-export {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault};
+const removeDataErrorElement = () => {
+  dataErrorElement.remove();
+  window.removeEventListener('keydown', handleWindowKeydown);
+  document.removeEventListener('click', handleDocumentClick);
+}
+
+const handleWindowKeydown = (evt) => {
+  const isEsc = isEscKey(evt);
+
+  if (isEsc) {
+    removeDataErrorElement();
+  }
+}
+
+const handleDocumentClick = (evt) => {
+  if (mainElement.contains(dataErrorElement)) {
+    evt.preventDefault();
+    removeDataErrorElement();
+  }
+}
+
+const showDataErrorMsg = () => {
+  mainElement.appendChild(dataErrorElement);
+
+  window.addEventListener('keydown', handleWindowKeydown);
+  document.addEventListener('click', handleDocumentClick);
+}
+
+export {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMsg};
