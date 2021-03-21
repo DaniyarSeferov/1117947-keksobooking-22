@@ -85,7 +85,7 @@ const getAccomodationMinPrice = (type) => {
 
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
-  alertContainer.style.zIndex = 100;
+  alertContainer.style.zIndex = 1000;
   alertContainer.style.position = 'fixed';
   alertContainer.style.top = '120px';
   alertContainer.style.right = 0;
