@@ -22,6 +22,7 @@ const errorTemplate = document.querySelector('#error')
   .content.querySelector('.error');
 const errorElement = errorTemplate.cloneNode(true);
 const errorBtnElement = errorElement.querySelector('.error__button');
+const resetElement = adFormElement.querySelector('.ad-form__reset');
 
 const setPriceElementData = (value) => {
   const minPrice = getAccomodationMinPrice(value);
@@ -127,8 +128,10 @@ const resetForm = () => {
 }
 
 const setAdFormReset = (onReset) => {
-  adFormElement.addEventListener('reset', () => {
-    setTimeout(onReset, 1);
+  resetElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    resetForm();
+    onReset();
   });
 };
 
@@ -164,6 +167,7 @@ const removeFormErrorElement = () => {
   errorElement.remove();
   window.removeEventListener('keydown', handleFormWindowKeydown);
   errorBtnElement.removeEventListener('click', handleErrorBtnClick);
+  document.addEventListener('click', handleFormDocumentClick);
 }
 
 const handleFormWindowKeydown = (evt) => {
@@ -181,11 +185,19 @@ const handleErrorBtnClick = (evt) => {
   }
 }
 
+const handleFormDocumentClick = (evt) => {
+  if (mainElement.contains(errorElement)) {
+    evt.preventDefault();
+    removeFormErrorElement();
+  }
+}
+
 const showErrorMsg = () => {
   mainElement.appendChild(errorElement);
 
   window.addEventListener('keydown', handleFormWindowKeydown);
   errorBtnElement.addEventListener('click', handleErrorBtnClick);
+  document.addEventListener('click', handleFormDocumentClick);
 }
 
 priceElement.addEventListener('input', validatePrice);
