@@ -91,5 +91,13 @@ const isEscKey = (evt) => {
   return handled;
 }
 
+const debounce = (func, timeout = 500) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+
 export {getRandomIntInclusive, getRandomFloatInclusive, getRandomArrayElement,
-  getRandomArrayElements, getAccomodationLabel, getAccomodationMinPrice, isEscKey};
+  getRandomArrayElements, getAccomodationLabel, getAccomodationMinPrice, isEscKey, debounce};
