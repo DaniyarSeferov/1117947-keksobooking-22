@@ -1,5 +1,5 @@
 /* global L:readonly */
-import {enableFiltersForm} from './filters.js';
+import {enableFiltersForm, filterAccomodations, getCurrentRank, sortAccomodations} from './filters.js';
 import {enableForm, setAddress} from './form.js';
 import {createCard} from './popup.js';
 import {isEscKey} from './utils.js';
@@ -8,6 +8,8 @@ const TOKIO_COORDINATES = {
   lat: 35.68950,
   lng: 139.69171,
 };
+
+const MAX_PINS_COUNT = 10;
 
 let mainPinMarker = null;
 const dataErrorTemplate = document.querySelector('#data-error')
@@ -57,43 +59,56 @@ const addMainPin = (map) => {
     coordinates.lng = coordinates.lng.toFixed(5);
     setAddress(coordinates);
   });
+
+  return mainPinMarker;
 }
 
-const addDeclarationPins = (declarations, map) => {
+const addDeclarationPins = (declarations, map, mainPinMarker) => {
   const markers = [];
+  const currentFilterRank = getCurrentRank();
 
-  declarations.forEach((declaration) => {
-    const lat = declaration.location.lat;
-    const lng = declaration.location.lng;
-    const icon = L.icon({
-      iconUrl: 'img/pin.svg',
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
-    });
+  declarations
+    .slice()
+    .sort(sortAccomodations)
+    .filter(filterAccomodations(currentFilterRank))
+    .slice(0, MAX_PINS_COUNT)
+    .forEach((declaration) => {
+      const lat = declaration.location.lat;
+      const lng = declaration.location.lng;
+      const icon = L.icon({
+        iconUrl: 'img/pin.svg',
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+      });
 
-    const marker = L.marker(
-      {
-        lat,
-        lng,
-      },
-      {
-        icon,
-      },
-    );
-    markers.push(marker);
-
-    marker
-      .addTo(map)
-      .bindPopup(
-        createCard(declaration),
+      const marker = L.marker(
         {
-          keepInView: true,
+          lat,
+          lng,
+        },
+        {
+          icon,
         },
       );
-  });
+      markers.push(marker);
 
-  const group = new L.featureGroup(markers);
-  map.fitBounds(group.getBounds());
+      marker
+        .addTo(map)
+        .bindPopup(
+          createCard(declaration),
+          {
+            keepInView: true,
+          },
+        );
+    });
+
+  if (markers.length) {
+    const group = new L.featureGroup(markers);
+    group.addLayer(mainPinMarker);
+    map.fitBounds(group.getBounds());
+  }
+
+  return markers;
 }
 
 const changeMainPinToDefault = () => {
@@ -130,4 +145,10 @@ const showDataErrorMsg = () => {
   document.addEventListener('click', handleDocumentClick);
 }
 
-export {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMsg};
+const removeDeclarationPins = (pins, map) => {
+  pins.forEach((marker) => {
+    map.removeLayer(marker);
+  });
+}
+
+export {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMsg, removeDeclarationPins};

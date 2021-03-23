@@ -1,13 +1,31 @@
-import {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMsg} from './map.js';
+import {
+  createMap,
+  addMainPin,
+  addDeclarationPins,
+  changeMainPinToDefault,
+  showDataErrorMsg,
+  removeDeclarationPins
+} from './map.js';
 import {resetForm, setAdFormReset, setAdFormSubmit, showErrorMsg, showSuccessMsg} from './form.js';
 import {createFetch} from './create-fetch.js';
-import {resetFiltersForm} from './filters.js';
+import {resetFiltersForm, setFeaturesClick, setFiltersChange} from './filters.js';
+import {debounce} from './utils.js';
 
-const getDeclarations = (map) => {
+const RERENDER_DELAY = 500;
+
+const getDeclarations = (map, mainPinMarker) => {
   const declarationsUrl = 'https://22.javascript.pages.academy/keksobooking/data';
 
   createFetch(declarationsUrl, null, (declarations) => {
-    addDeclarationPins(declarations, map);
+    let pins = addDeclarationPins(declarations, map, mainPinMarker);
+    setFeaturesClick(debounce(() => {
+      removeDeclarationPins(pins, map);
+      pins = addDeclarationPins(declarations, map, mainPinMarker);
+    }, RERENDER_DELAY));
+    setFiltersChange(() => {
+      removeDeclarationPins(pins, map);
+      pins = addDeclarationPins(declarations, map, mainPinMarker);
+    });
   }, () => {
     showDataErrorMsg();
   });
@@ -20,8 +38,8 @@ const resetToDefault = () => {
 
 const initMap = () => {
   const map = createMap();
-  addMainPin(map);
-  getDeclarations(map);
+  const mainPinMarker = addMainPin(map);
+  getDeclarations(map, mainPinMarker);
 }
 
 const initMainForm = () => {
