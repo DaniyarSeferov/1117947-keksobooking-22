@@ -81,4 +81,15 @@ const getAccomodationMinPrice = (type) => {
   return accomodationMap ? accomodationMap.minPrice : 0;
 }
 
-export {getRandomIntInclusive, getRandomFloatInclusive, getRandomArrayElement, getRandomArrayElements, getAccomodationLabel, getAccomodationMinPrice};
+const isEscKey = (evt) => {
+  let handled = false;
+  if (evt.key !== undefined && evt.key === 'Escape') {
+    handled = true;
+  } else if (evt.keyCode !== undefined && evt.keyCode === 27) {
+    handled = true;
+  }
+  return handled;
+}
+
+export {getRandomIntInclusive, getRandomFloatInclusive, getRandomArrayElement,
+  getRandomArrayElements, getAccomodationLabel, getAccomodationMinPrice, isEscKey};

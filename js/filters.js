@@ -22,6 +22,10 @@ const enableFiltersForm = () => {
   });
 }
 
+const resetFiltersForm = () => {
+  filtersFormElement.reset();
+}
+
 disableFiltersForm();
 
-export {enableFiltersForm};
+export {enableFiltersForm, resetFiltersForm};

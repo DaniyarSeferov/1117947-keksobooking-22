@@ -1,4 +1,5 @@
-import {getAccomodationMinPrice} from './utils.js';
+import {getAccomodationMinPrice, isEscKey} from './utils.js';
+import {createFetch} from './create-fetch.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -13,6 +14,15 @@ const fieldsetFormElements = adFormElement.querySelectorAll('fieldset');
 const titleElement = adFormElement.querySelector('#title');
 const roomNumberElement = adFormElement.querySelector('#room_number');
 const capacityElement = adFormElement.querySelector('#capacity');
+const successTemplate = document.querySelector('#success')
+  .content.querySelector('.success');
+const successElement = successTemplate.cloneNode(true);
+const mainElement = document.querySelector('main');
+const errorTemplate = document.querySelector('#error')
+  .content.querySelector('.error');
+const errorElement = errorTemplate.cloneNode(true);
+const errorBtnElement = errorElement.querySelector('.error__button');
+const resetElement = adFormElement.querySelector('.ad-form__reset');
 
 const setPriceElementData = (value) => {
   const minPrice = getAccomodationMinPrice(value);
@@ -98,6 +108,98 @@ const validateRoomCapacity = () => {
   capacityElement.reportValidity();
 }
 
+const setAdFormSubmit = (onSuccess, onError) => {
+  adFormElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const url = 'https://22.javascript.pages.academy/keksobooking';
+    const formData = new FormData(evt.target);
+    const options = {
+      method: 'POST',
+      body: formData,
+    };
+
+    createFetch(url, options, onSuccess, onError);
+  });
+};
+
+const resetForm = () => {
+  adFormElement.reset();
+}
+
+const setAdFormReset = (onReset) => {
+  resetElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    resetForm();
+    onReset();
+  });
+};
+
+const removeSuccessElement = () => {
+  successElement.remove();
+  window.removeEventListener('keydown', handleSuccessWindowKeydown);
+  document.removeEventListener('click', handleSuccessDocumentClick);
+}
+
+const handleSuccessWindowKeydown = (evt) => {
+  const isEsc = isEscKey(evt);
+
+  if (isEsc) {
+    removeSuccessElement();
+  }
+}
+
+const handleSuccessDocumentClick = (evt) => {
+  if (mainElement.contains(successElement)) {
+    evt.preventDefault();
+    removeSuccessElement();
+  }
+}
+
+const showSuccessMsg = () => {
+  mainElement.appendChild(successElement);
+
+  window.addEventListener('keydown', handleSuccessWindowKeydown);
+  document.addEventListener('click', handleSuccessDocumentClick);
+};
+
+const removeFormErrorElement = () => {
+  errorElement.remove();
+  window.removeEventListener('keydown', handleFormWindowKeydown);
+  errorBtnElement.removeEventListener('click', handleErrorBtnClick);
+  document.addEventListener('click', handleFormDocumentClick);
+}
+
+const handleFormWindowKeydown = (evt) => {
+  const isEsc = isEscKey(evt);
+
+  if (isEsc) {
+    removeFormErrorElement();
+  }
+}
+
+const handleErrorBtnClick = (evt) => {
+  if (mainElement.contains(errorElement)) {
+    evt.preventDefault();
+    removeFormErrorElement();
+  }
+}
+
+const handleFormDocumentClick = (evt) => {
+  if (mainElement.contains(errorElement)) {
+    evt.preventDefault();
+    removeFormErrorElement();
+  }
+}
+
+const showErrorMsg = () => {
+  mainElement.appendChild(errorElement);
+
+  window.addEventListener('keydown', handleFormWindowKeydown);
+  errorBtnElement.addEventListener('click', handleErrorBtnClick);
+  document.addEventListener('click', handleFormDocumentClick);
+}
+
 priceElement.addEventListener('input', validatePrice);
 roomNumberElement.addEventListener('input', validateRoomCapacity);
 capacityElement.addEventListener('input', validateRoomCapacity);
@@ -105,4 +207,5 @@ capacityElement.addEventListener('input', validateRoomCapacity);
 setPriceElementData(typeElement.value);
 disableForm();
 
-export {enableForm, disableForm, setAddress};
+export {enableForm, disableForm, setAddress, setAdFormSubmit, resetForm, setAdFormReset,
+  showSuccessMsg, showErrorMsg};
