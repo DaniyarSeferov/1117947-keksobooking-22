@@ -10,6 +10,8 @@ import {resetForm, setAdFormReset, setAdFormSubmit, showErrorMsg, showSuccessMsg
 import {createFetch} from './create-fetch.js';
 import {resetFiltersForm, setFeaturesClick, setFiltersChange} from './filters.js';
 import {debounce} from './utils.js';
+import './thumbnail.js';
+import {initThumbnails, setDefaultThumbnails} from './thumbnail.js';
 
 const RERENDER_DELAY = 500;
 
@@ -34,6 +36,7 @@ const getDeclarations = (map, mainPinMarker) => {
 const resetToDefault = () => {
   resetFiltersForm();
   changeMainPinToDefault();
+  setDefaultThumbnails();
 };
 
 const initMap = () => {
@@ -56,3 +59,4 @@ const initMainForm = () => {
 
 initMap();
 initMainForm();
+initThumbnails();
