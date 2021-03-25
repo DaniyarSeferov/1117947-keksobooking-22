@@ -11,28 +11,38 @@ const getRoomsContent = (roomsNumber, guestsNumber) => {
 }
 
 const setFeaturesContent = (featuresElement, features) => {
-  const featuresListFragment = document.createDocumentFragment();
-  features.forEach((feature) => {
-    const featureElement = featuresElement.querySelector(`.popup__feature--${feature}`);
-    if (featureElement) {
-      featuresListFragment.appendChild(featureElement);
-    }
-  });
-  featuresElement.innerHTML = '';
-  featuresElement.appendChild(featuresListFragment);
+  if (features && features.length) {
+    const featuresListFragment = document.createDocumentFragment();
+    features.forEach((feature) => {
+      const featureElement = featuresElement.querySelector(`.popup__feature--${feature}`);
+      if (featureElement) {
+        featuresListFragment.appendChild(featureElement);
+      }
+    });
+    featuresElement.innerHTML = '';
+    featuresElement.appendChild(featuresListFragment);
+  } else {
+    featuresElement.innerHTML = '';
+    featuresElement.style = 'display: none';
+  }
 }
 
 const setPhotosContent = (photosElement, photos) => {
-  const photosListFragment = document.createDocumentFragment();
-  const photoElementTemplate = photosElement.querySelector('.popup__photo');
+  if (photos && photos.length) {
+    const photosListFragment = document.createDocumentFragment();
+    const photoElementTemplate = photosElement.querySelector('.popup__photo');
 
-  photos.forEach((photo) => {
-    const photoElement = photoElementTemplate.cloneNode();
-    photoElement.src = photo;
-    photosListFragment.appendChild(photoElement);
-  });
-  photosElement.innerHTML = '';
-  photosElement.appendChild(photosListFragment);
+    photos.forEach((photo) => {
+      const photoElement = photoElementTemplate.cloneNode();
+      photoElement.src = photo;
+      photosListFragment.appendChild(photoElement);
+    });
+    photosElement.innerHTML = '';
+    photosElement.appendChild(photosListFragment);
+  } else {
+    photosElement.innerHTML = '';
+    photosElement.style = 'display: none';
+  }
 }
 
 const changeElementContent = (element, selector, elementKey, data, dataKey) => {
