@@ -8,7 +8,7 @@ import {
 } from './map.js';
 import {resetForm, setAdFormReset, setAdFormSubmit, showErrorMsg, showSuccessMsg} from './form.js';
 import {createFetch} from './create-fetch.js';
-import {resetFiltersForm, setFeaturesClick, setFiltersChange} from './filters.js';
+import {resetFiltersForm, setFiltersChange} from './filters.js';
 import {debounce} from './utils.js';
 import './thumbnail.js';
 import {initThumbnails, setDefaultThumbnails} from './thumbnail.js';
@@ -20,14 +20,10 @@ const getDeclarations = (map, mainPinMarker) => {
 
   createFetch(declarationsUrl, null, (declarations) => {
     let pins = addDeclarationPins(declarations, map, mainPinMarker);
-    setFeaturesClick(debounce(() => {
+    setFiltersChange(debounce(() => {
       removeDeclarationPins(pins, map);
       pins = addDeclarationPins(declarations, map, mainPinMarker);
     }, RERENDER_DELAY));
-    setFiltersChange(() => {
-      removeDeclarationPins(pins, map);
-      pins = addDeclarationPins(declarations, map, mainPinMarker);
-    });
   }, () => {
     showDataErrorMsg();
   });

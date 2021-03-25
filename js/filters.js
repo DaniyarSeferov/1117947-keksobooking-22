@@ -38,7 +38,7 @@ const filterElevatorElement = housingFeaturesElement.querySelector('#filter-elev
 const filterConditionerElement = housingFeaturesElement.querySelector('#filter-conditioner');
 
 const disableFiltersForm = () => {
-  filtersFormElement.classList.add('ad-form--disabled');
+  filtersFormElement.classList.add('map__filters--disabled');
   fieldsetFiltersElements.forEach((fieldsetElement) => {
     fieldsetElement.disabled = true;
   });
@@ -48,7 +48,7 @@ const disableFiltersForm = () => {
 }
 
 const enableFiltersForm = () => {
-  filtersFormElement.classList.remove('ad-form--disabled');
+  filtersFormElement.classList.remove('map__filters--disabled');
   fieldsetFiltersElements.forEach((fieldsetElement) => {
     fieldsetElement.disabled = false;
   });
@@ -129,20 +129,8 @@ const sortAccomodations = (accomodationA, accomodationB) => {
   return accomodationB.rank - accomodationA.rank;
 }
 
-const setFeaturesClick = (cb) => {
-  filterWifiElement.addEventListener('click', cb);
-  filterDishwasherElement.addEventListener('click', cb);
-  filterParkingElement.addEventListener('click', cb);
-  filterWasherElement.addEventListener('click', cb);
-  filterElevatorElement.addEventListener('click', cb);
-  filterConditionerElement.addEventListener('click', cb);
-};
-
 const setFiltersChange = (cb) => {
-  housingTypeElement.addEventListener('change', cb);
-  housingPriceElement.addEventListener('change', cb);
-  housingRoomsElement.addEventListener('change', cb);
-  housingGuestsElement.addEventListener('change', cb);
+  filtersFormElement.addEventListener('change', cb);
 };
 
 const getCurrentRank = () => {
@@ -190,4 +178,4 @@ const filterAccomodations = (currentFilterRank) => {
 
 disableFiltersForm();
 
-export {enableFiltersForm, resetFiltersForm, sortAccomodations, setFeaturesClick, filterAccomodations, getCurrentRank, setFiltersChange};
+export {enableFiltersForm, resetFiltersForm, sortAccomodations, filterAccomodations, getCurrentRank, setFiltersChange};
