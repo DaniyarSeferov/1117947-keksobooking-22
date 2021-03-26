@@ -2,19 +2,19 @@ const getAccomodationMap = (type) => {
   const accomodationMap = {
     palace: {
       label: 'Дворец',
-      minPrice: 10000,
+      minimalPrice: 10000,
     },
-    flat:{
+    flat: {
       label: 'Квартира',
-      minPrice: 1000,
+      minimalPrice: 1000,
     },
-    house:{
+    house: {
       label: 'Дом',
-      minPrice: 5000,
+      minimalPrice: 5000,
     },
-    bungalow:{
+    bungalow: {
       label: 'Бунгало',
-      minPrice: 0,
+      minimalPrice: 0,
     },
   };
 
@@ -26,9 +26,9 @@ const getAccomodationLabel = (type) => {
   return accomodationMap ? accomodationMap.label : '';
 }
 
-const getAccomodationMinPrice = (type) => {
+const getAccomodationMinimalPrice = (type) => {
   const accomodationMap = getAccomodationMap(type);
-  return accomodationMap ? accomodationMap.minPrice : 0;
+  return accomodationMap ? accomodationMap.minimalPrice : 0;
 }
 
 const isEscKey = (evt) => {
@@ -41,12 +41,12 @@ const isEscKey = (evt) => {
   return handled;
 }
 
-const debounce = (func, timeout = 500) => {
+const debounce = (cb, timeout = 500) => {
   let timer;
   return (...args) => {
     clearTimeout(timer);
-    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    timer = setTimeout(() => { cb.apply(this, args); }, timeout);
   };
 }
 
-export {getAccomodationLabel, getAccomodationMinPrice, isEscKey, debounce};
+export {getAccomodationLabel, getAccomodationMinimalPrice, isEscKey, debounce};

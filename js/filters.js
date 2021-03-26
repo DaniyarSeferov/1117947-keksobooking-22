@@ -5,8 +5,8 @@ const DefaultFilters = {
   HOUSING_GUESTS: 'any',
 };
 
-const HousingPrice = {
-  MIDDLE: [10000, 50000],
+const HousingPrices = {
+  MIDDLE_PRICES: [10000, 50000],
 };
 
 const FiltersRank = {
@@ -65,9 +65,9 @@ const getPriceType = (price) => {
   let type = '';
 
   if (!isNaN(price)) {
-    if (price >= HousingPrice.MIDDLE[1]) {
+    if (price >= HousingPrices.MIDDLE_PRICES[1]) {
       type = 'high';
-    } else if ((price >= HousingPrice.MIDDLE[0]) && (price < HousingPrice.MIDDLE[1])) {
+    } else if ((price >= HousingPrices.MIDDLE_PRICES[0]) && (price < HousingPrices.MIDDLE_PRICES[1])) {
       type = 'middle';
     } else {
       type = 'low';
@@ -118,19 +118,9 @@ const getAccomodationRank = (accomodation) => {
   return rank;
 };
 
-const setAccomodationRank = (accomodation) => {
-  accomodation.rank = getAccomodationRank(accomodation);
-};
-
-const sortAccomodations = (accomodationA, accomodationB) => {
-  setAccomodationRank(accomodationA);
-  setAccomodationRank(accomodationB);
-
-  return accomodationB.rank - accomodationA.rank;
-}
-
 const setFiltersChange = (cb) => {
   filtersFormElement.addEventListener('change', cb);
+  filtersFormElement.addEventListener('reset', cb);
 };
 
 const getCurrentRank = () => {
@@ -172,10 +162,11 @@ const getCurrentRank = () => {
 
 const filterAccomodations = (currentFilterRank) => {
   return (item) => {
+    item.rank = getAccomodationRank(item);
     return item.rank === currentFilterRank;
   };
 };
 
 disableFiltersForm();
 
-export {enableFiltersForm, resetFiltersForm, sortAccomodations, filterAccomodations, getCurrentRank, setFiltersChange};
+export {enableFiltersForm, resetFiltersForm, filterAccomodations, getCurrentRank, setFiltersChange};

@@ -1,15 +1,15 @@
 /* global L:readonly */
-import {enableFiltersForm, filterAccomodations, getCurrentRank, sortAccomodations} from './filters.js';
-import {enableForm, setAddress} from './form.js';
+import {filterAccomodations, getCurrentRank} from './filters.js';
+import {setAddress} from './form.js';
 import {createCard} from './popup.js';
 import {isEscKey} from './utils.js';
 
-const TOKIO_COORDINATES = {
+const TokyoCoordinates = {
   lat: 35.68950,
   lng: 139.69171,
 };
 
-const MAX_PINS_COUNT = 10;
+const MAXIMAL_PINS_COUNT = 10;
 
 let mainPinMarker = null;
 const dataErrorTemplate = document.querySelector('#data-error')
@@ -17,14 +17,11 @@ const dataErrorTemplate = document.querySelector('#data-error')
 const dataErrorElement = dataErrorTemplate.cloneNode(true);
 const mainElement = document.querySelector('main');
 
-const createMap = () => {
-  const map = L.map('map-canvas')
-    .on('load', () => {
-      enableFiltersForm();
-      enableForm();
-      setAddress(TOKIO_COORDINATES);
-    })
-    .setView(TOKIO_COORDINATES, 13);
+const createMap = (onLoad) => {
+  const map = L.map('map-canvas');
+  map.on('load', () => {
+    onLoad(map);
+  }).setView(TokyoCoordinates, 13);
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -32,8 +29,6 @@ const createMap = () => {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>',
     },
   ).addTo(map);
-
-  return map;
 }
 
 const addMainPin = (map) => {
@@ -44,7 +39,7 @@ const addMainPin = (map) => {
   });
 
   mainPinMarker = L.marker(
-    TOKIO_COORDINATES,
+    TokyoCoordinates,
     {
       draggable: true,
       icon: mainPinIcon,
@@ -69,12 +64,11 @@ const addDeclarationPins = (declarations, map, mainPinMarker) => {
 
   declarations
     .slice()
-    .sort(sortAccomodations)
     .filter(filterAccomodations(currentFilterRank))
-    .slice(0, MAX_PINS_COUNT)
+    .slice(0, MAXIMAL_PINS_COUNT)
     .forEach((declaration) => {
-      const lat = declaration.location.lat;
-      const lng = declaration.location.lng;
+      const locationLatitude = declaration.location.lat;
+      const locationLongitude = declaration.location.lng;
       const icon = L.icon({
         iconUrl: 'img/pin.svg',
         iconSize: [40, 40],
@@ -83,8 +77,8 @@ const addDeclarationPins = (declarations, map, mainPinMarker) => {
 
       const marker = L.marker(
         {
-          lat,
-          lng,
+          lat: locationLatitude,
+          lng: locationLongitude,
         },
         {
           icon,
@@ -112,9 +106,9 @@ const addDeclarationPins = (declarations, map, mainPinMarker) => {
 }
 
 const changeMainPinToDefault = () => {
-  const newLatLng = new L.latLng(TOKIO_COORDINATES);
-  mainPinMarker.setLatLng(newLatLng);
-  setAddress(TOKIO_COORDINATES);
+  const defaultCoordinates = new L.latLng(TokyoCoordinates);
+  mainPinMarker.setLatLng(defaultCoordinates);
+  setAddress(TokyoCoordinates);
 }
 
 const removeDataErrorElement = () => {
@@ -138,7 +132,7 @@ const handleDocumentClick = (evt) => {
   }
 }
 
-const showDataErrorMsg = () => {
+const showDataErrorMessage = () => {
   mainElement.appendChild(dataErrorElement);
 
   window.addEventListener('keydown', handleWindowKeydown);
@@ -151,4 +145,5 @@ const removeDeclarationPins = (pins, map) => {
   });
 }
 
-export {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMsg, removeDeclarationPins};
+export {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMessage, removeDeclarationPins,
+  TokyoCoordinates};
