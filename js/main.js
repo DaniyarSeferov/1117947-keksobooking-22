@@ -3,8 +3,8 @@ import {
   addMainPin,
   addDeclarationPins,
   changeMainPinToDefault,
-  showDataErrorMsg,
-  removeDeclarationPins, TOKIO_COORDINATES
+  showDataErrorMessage,
+  removeDeclarationPins, TokyoCoordinates
 } from './map.js';
 import {
   enableForm,
@@ -12,8 +12,8 @@ import {
   setAdFormReset,
   setAdFormSubmit,
   setPriceElementData,
-  showErrorMsg,
-  showSuccessMsg
+  showErrorMessage,
+  showSuccessMessage
 } from './form.js';
 import {createFetch} from './create-fetch.js';
 import {enableFiltersForm, resetFiltersForm, setFiltersChange} from './filters.js';
@@ -34,7 +34,7 @@ const getDeclarations = (map, mainPinMarker) => {
       pins = addDeclarationPins(declarations, map, mainPinMarker);
     }, RERENDER_DELAY));
   }, () => {
-    showDataErrorMsg();
+    showDataErrorMessage();
   });
 }
 
@@ -50,17 +50,17 @@ const initMap = () => {
     const mainPinMarker = addMainPin(map);
     getDeclarations(map, mainPinMarker);
     enableForm();
-    setAddress(TOKIO_COORDINATES);
+    setAddress(TokyoCoordinates);
   });
 }
 
 const initMainForm = () => {
   setAdFormSubmit(() => {
-    showSuccessMsg();
+    showSuccessMessage();
     resetForm();
     resetToDefault();
   }, () => {
-    showErrorMsg();
+    showErrorMessage();
   });
 
   setAdFormReset(resetToDefault);

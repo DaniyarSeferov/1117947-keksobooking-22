@@ -1,8 +1,8 @@
-import {getAccomodationMinPrice, isEscKey} from './utils.js';
+import {getAccomodationMinimalPrice, isEscKey} from './utils.js';
 import {createFetch} from './create-fetch.js';
 
-const MIN_TITLE_LENGTH = 30;
-const MAX_TITLE_LENGTH = 100;
+const MINIMAL_TITLE_LENGTH = 30;
+const MAXIMAL_TITLE_LENGTH = 100;
 
 const adFormElement = document.querySelector('.ad-form');
 const typeElement = adFormElement.querySelector('#type');
@@ -21,25 +21,25 @@ const mainElement = document.querySelector('main');
 const errorTemplate = document.querySelector('#error')
   .content.querySelector('.error');
 const errorElement = errorTemplate.cloneNode(true);
-const errorBtnElement = errorElement.querySelector('.error__button');
+const errorButtonElement = errorElement.querySelector('.error__button');
 const resetElement = adFormElement.querySelector('.ad-form__reset');
 
 const setPriceElementData = (value) => {
   value = value ? value : typeElement.value;
-  const minPrice = getAccomodationMinPrice(value);
-  priceElement.placeholder = minPrice;
-  priceElement.min = minPrice;
+  const minimalPrice = getAccomodationMinimalPrice(value);
+  priceElement.placeholder = minimalPrice;
+  priceElement.min = minimalPrice;
 }
 
 const validatePrice = () => {
   const priceValue = Number(priceElement.value);
-  const priceMin = Number(priceElement.min);
-  const priceMax = Number(priceElement.max);
+  const priceMinimal = Number(priceElement.min);
+  const priceMaximal = Number(priceElement.max);
 
-  if (priceValue > priceMax) {
-    priceElement.setCustomValidity(`Цена должна быть ниже либо равна ${priceMax} р.`);
-  } else if (priceValue < priceMin) {
-    priceElement.setCustomValidity(`Цена должна быть выше либо равна ${priceMin} р.`);
+  if (priceValue > priceMaximal) {
+    priceElement.setCustomValidity(`Цена должна быть ниже либо равна ${priceMaximal} р.`);
+  } else if (priceValue < priceMinimal) {
+    priceElement.setCustomValidity(`Цена должна быть выше либо равна ${priceMinimal} р.`);
   } else {
     priceElement.setCustomValidity('');
   }
@@ -47,17 +47,17 @@ const validatePrice = () => {
   priceElement.reportValidity();
 }
 
-typeElement.addEventListener('change', (event) => {
-  setPriceElementData(event.target.value);
+typeElement.addEventListener('change', (evt) => {
+  setPriceElementData(evt.target.value);
   validatePrice();
 });
 
-timeInElement.addEventListener('change', (event) => {
-  timeOutElement.value = event.target.value;
+timeInElement.addEventListener('change', (evt) => {
+  timeOutElement.value = evt.target.value;
 });
 
-timeOutElement.addEventListener('change', (event) => {
-  timeInElement.value = event.target.value;
+timeOutElement.addEventListener('change', (evt) => {
+  timeInElement.value = evt.target.value;
 });
 
 const disableForm = () => {
@@ -81,10 +81,10 @@ const setAddress = ({lat, lng}) => {
 titleElement.addEventListener('input', () => {
   const valueLength = titleElement.value.length;
 
-  if (valueLength < MIN_TITLE_LENGTH) {
-    titleElement.setCustomValidity('Ещё ' + (MIN_TITLE_LENGTH - valueLength) +' симв.');
-  } else if (valueLength > MAX_TITLE_LENGTH) {
-    titleElement.setCustomValidity('Удалите лишние ' + (valueLength - MAX_TITLE_LENGTH) +' симв.');
+  if (valueLength < MINIMAL_TITLE_LENGTH) {
+    titleElement.setCustomValidity('Ещё ' + (MINIMAL_TITLE_LENGTH - valueLength) +' симв.');
+  } else if (valueLength > MAXIMAL_TITLE_LENGTH) {
+    titleElement.setCustomValidity('Удалите лишние ' + (valueLength - MAXIMAL_TITLE_LENGTH) +' симв.');
   } else {
     titleElement.setCustomValidity('');
   }
@@ -157,7 +157,7 @@ const handleSuccessDocumentClick = (evt) => {
   }
 }
 
-const showSuccessMsg = () => {
+const showSuccessMessage = () => {
   mainElement.appendChild(successElement);
 
   window.addEventListener('keydown', handleSuccessWindowKeydown);
@@ -167,7 +167,7 @@ const showSuccessMsg = () => {
 const removeFormErrorElement = () => {
   errorElement.remove();
   window.removeEventListener('keydown', handleFormWindowKeydown);
-  errorBtnElement.removeEventListener('click', handleErrorBtnClick);
+  errorButtonElement.removeEventListener('click', handleErrorBtnClick);
   document.addEventListener('click', handleFormDocumentClick);
 }
 
@@ -193,11 +193,11 @@ const handleFormDocumentClick = (evt) => {
   }
 }
 
-const showErrorMsg = () => {
+const showErrorMessage = () => {
   mainElement.appendChild(errorElement);
 
   window.addEventListener('keydown', handleFormWindowKeydown);
-  errorBtnElement.addEventListener('click', handleErrorBtnClick);
+  errorButtonElement.addEventListener('click', handleErrorBtnClick);
   document.addEventListener('click', handleFormDocumentClick);
 }
 
@@ -209,4 +209,4 @@ setPriceElementData(typeElement.value);
 disableForm();
 
 export {enableForm, disableForm, setAddress, setAdFormSubmit, resetForm, setAdFormReset,
-  showSuccessMsg, showErrorMsg, setPriceElementData};
+  showSuccessMessage, showErrorMessage, setPriceElementData};
