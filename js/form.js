@@ -25,6 +25,7 @@ const errorBtnElement = errorElement.querySelector('.error__button');
 const resetElement = adFormElement.querySelector('.ad-form__reset');
 
 const setPriceElementData = (value) => {
+  value = value ? value : typeElement.value;
   const minPrice = getAccomodationMinPrice(value);
   priceElement.placeholder = minPrice;
   priceElement.min = minPrice;
@@ -208,4 +209,4 @@ setPriceElementData(typeElement.value);
 disableForm();
 
 export {enableForm, disableForm, setAddress, setAdFormSubmit, resetForm, setAdFormReset,
-  showSuccessMsg, showErrorMsg};
+  showSuccessMsg, showErrorMsg, setPriceElementData};

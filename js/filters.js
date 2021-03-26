@@ -131,6 +131,7 @@ const sortAccomodations = (accomodationA, accomodationB) => {
 
 const setFiltersChange = (cb) => {
   filtersFormElement.addEventListener('change', cb);
+  filtersFormElement.addEventListener('reset', cb);
 };
 
 const getCurrentRank = () => {

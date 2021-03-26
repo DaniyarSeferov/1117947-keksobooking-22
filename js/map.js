@@ -1,6 +1,6 @@
 /* global L:readonly */
-import {enableFiltersForm, filterAccomodations, getCurrentRank, sortAccomodations} from './filters.js';
-import {enableForm, setAddress} from './form.js';
+import {filterAccomodations, getCurrentRank, sortAccomodations} from './filters.js';
+import {setAddress} from './form.js';
 import {createCard} from './popup.js';
 import {isEscKey} from './utils.js';
 
@@ -17,14 +17,11 @@ const dataErrorTemplate = document.querySelector('#data-error')
 const dataErrorElement = dataErrorTemplate.cloneNode(true);
 const mainElement = document.querySelector('main');
 
-const createMap = () => {
-  const map = L.map('map-canvas')
-    .on('load', () => {
-      enableFiltersForm();
-      enableForm();
-      setAddress(TOKIO_COORDINATES);
-    })
-    .setView(TOKIO_COORDINATES, 13);
+const createMap = (onLoad) => {
+  const map = L.map('map-canvas');
+  map.on('load', () => {
+    onLoad(map);
+  }).setView(TOKIO_COORDINATES, 13);
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -32,8 +29,6 @@ const createMap = () => {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>',
     },
   ).addTo(map);
-
-  return map;
 }
 
 const addMainPin = (map) => {
@@ -151,4 +146,5 @@ const removeDeclarationPins = (pins, map) => {
   });
 }
 
-export {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMsg, removeDeclarationPins};
+export {createMap, addMainPin, addDeclarationPins, changeMainPinToDefault, showDataErrorMsg, removeDeclarationPins,
+  TOKIO_COORDINATES};

@@ -4,11 +4,19 @@ import {
   addDeclarationPins,
   changeMainPinToDefault,
   showDataErrorMsg,
-  removeDeclarationPins
+  removeDeclarationPins, TOKIO_COORDINATES
 } from './map.js';
-import {resetForm, setAdFormReset, setAdFormSubmit, showErrorMsg, showSuccessMsg} from './form.js';
+import {
+  enableForm,
+  resetForm, setAddress,
+  setAdFormReset,
+  setAdFormSubmit,
+  setPriceElementData,
+  showErrorMsg,
+  showSuccessMsg
+} from './form.js';
 import {createFetch} from './create-fetch.js';
-import {resetFiltersForm, setFiltersChange} from './filters.js';
+import {enableFiltersForm, resetFiltersForm, setFiltersChange} from './filters.js';
 import {debounce} from './utils.js';
 import './thumbnail.js';
 import {initThumbnails, setDefaultThumbnails} from './thumbnail.js';
@@ -19,6 +27,7 @@ const getDeclarations = (map, mainPinMarker) => {
   const declarationsUrl = 'https://22.javascript.pages.academy/keksobooking/data';
 
   createFetch(declarationsUrl, null, (declarations) => {
+    enableFiltersForm();
     let pins = addDeclarationPins(declarations, map, mainPinMarker);
     setFiltersChange(debounce(() => {
       removeDeclarationPins(pins, map);
@@ -31,14 +40,18 @@ const getDeclarations = (map, mainPinMarker) => {
 
 const resetToDefault = () => {
   resetFiltersForm();
+  setPriceElementData();
   changeMainPinToDefault();
   setDefaultThumbnails();
 };
 
 const initMap = () => {
-  const map = createMap();
-  const mainPinMarker = addMainPin(map);
-  getDeclarations(map, mainPinMarker);
+  createMap((map) => {
+    const mainPinMarker = addMainPin(map);
+    getDeclarations(map, mainPinMarker);
+    enableForm();
+    setAddress(TOKIO_COORDINATES);
+  });
 }
 
 const initMainForm = () => {
