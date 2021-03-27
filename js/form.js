@@ -3,6 +3,8 @@ import {createFetch} from './create-fetch.js';
 
 const MINIMAL_TITLE_LENGTH = 30;
 const MAXIMAL_TITLE_LENGTH = 100;
+const ROOM_NUMBER_NOT_FOR_GUESTS = 100;
+const CAPACITY_NOT_FOR_GUESTS = 0;
 
 const adFormElement = document.querySelector('.ad-form');
 const typeElement = adFormElement.querySelector('#type');
@@ -97,9 +99,9 @@ const validateRoomCapacity = () => {
   const capacity = Number(capacityElement.value);
   const roomNumber = Number(roomNumberElement.value);
 
-  if (roomNumber === 100 && capacity !== 0) {
+  if (roomNumber === ROOM_NUMBER_NOT_FOR_GUESTS && capacity !== CAPACITY_NOT_FOR_GUESTS) {
     error = 'Только не для гостей';
-  } else if (roomNumber !== 100 && capacity === 0) {
+  } else if (roomNumber !== ROOM_NUMBER_NOT_FOR_GUESTS && capacity === CAPACITY_NOT_FOR_GUESTS) {
     error = 'Только для 100 комнат';
   } else if (capacity > roomNumber) {
     error = 'Количество гостей не должно превышать количество комнат.';

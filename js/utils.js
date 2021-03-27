@@ -1,3 +1,5 @@
+const ESCAPE_KEY_CODE = 27;
+
 const getAccomodationMap = (type) => {
   const accomodationMap = {
     palace: {
@@ -35,7 +37,7 @@ const isEscKey = (evt) => {
   let handled = false;
   if (evt.key !== undefined && evt.key === 'Escape') {
     handled = true;
-  } else if (evt.keyCode !== undefined && evt.keyCode === 27) {
+  } else if (evt.keyCode !== undefined && evt.keyCode === ESCAPE_KEY_CODE) {
     handled = true;
   }
   return handled;
